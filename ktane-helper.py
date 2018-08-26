@@ -110,12 +110,8 @@ def checkeven(serial):
 serial.trace("w", lambda name, index, mode, serial=serial: checkvowel(serial))
 serial.trace("w", lambda name, index, mode, serial=serial: checkeven(serial))
 
-ports = []
-
 strikes = IntVar()
 strikes.set(value=0)
-
-indicators = ()
 
 strikecounter = Entry(master, textvariable=strikes, state=DISABLED)
 strikecounter.grid(row=0, column=1)
@@ -124,11 +120,8 @@ serialdisplay.grid(row=1, column=1)
 
 
 def reset():
-    global serial, ports, strikes, indicators
     serial.set(value='')
-    ports = []
     strikes.set(value=0)
-    indicators = ()
     vowel_label.config(bg='red')
     even_label.config(bg='red')
     port_list.delete(0, END)
@@ -139,7 +132,6 @@ def reset():
 
 
 def inc_strikes():
-    global strikes
     strikes.set(value=strikes.get() + 1)
 
 
