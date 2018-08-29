@@ -81,15 +81,12 @@ def checkwords_2(col):
                         if i in passwords[row][column][1]:
                             if word.cget('text') not in current_true2:
                                 current_true2.append(word)
-            print(current_true2)
             common = set(current_true2) & set(previous_true2)
             false = set(allwords) - set(common)
             for word in list(common):
                 word.config(bg='green')
-                print(word.cget('text'))
             for word in list(false):
                 word.config(bg='red')
-                print(word.cget('text') + ' false')
 
         else:
             for column in range(5):
@@ -97,7 +94,6 @@ def checkwords_2(col):
                     word = words[row][column]
                     if word.cget('background') == 'green':
                         previous_true2.append(word)
-            print(previous_true2)
             checkedprevious2 = True
             for i in letters:
                 for column in range(0, 5):
@@ -105,11 +101,8 @@ def checkwords_2(col):
                         word = words[row][column]
                         if i in passwords[row][column][1]:
                                 current_true2.append(word)
-            print(current_true2)
             common = set(current_true2) & set(previous_true2)
             false = set(allwords) - set(common)
-            print(list(common))
-            print(list(false))
             for word in list(common):
                 word.config(bg='green')
             for word in list(false):
@@ -167,6 +160,18 @@ def checkwords_3(col):
                 word.config(bg='red')
 
 
+def reset():
+    global col1, col2, col3
+    for col in range(0, 5):
+        for row in range(0, 7):
+            words[row][col].config(bg='systembuttonface')
+    col1.set('')
+    col2.set('')
+    col3.set('')
+
+
+resetbutton = Button(master, text='Reset all', command=reset)
+resetbutton.grid(row=8, column=2)
 col1.trace("w", lambda name, index, mode, col1=col1: checkwords_1(col1))
 col2.trace("w", lambda name, index, mode, col2=col2: checkwords_2(col2))
 col3.trace("w", lambda name, index, mode, col3=col3: checkwords_3(col3))
