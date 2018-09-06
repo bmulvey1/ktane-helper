@@ -2,16 +2,10 @@ from tkinter import *
 
 master = Tk()
 
+box_size = 80
+
 # all coords are row, column
-maze1_circles = [21, 36]
-maze2_circles = [42, 25]
-maze3_circles = [44, 46]
-maze4_circles = [11, 41]
-maze5_circles = [64, 35]
-maze6_circles = [53, 15]
-maze7_circles = [12, 62]
-maze8_circles = [14, 43]
-maze9_circles = [51, 23]
+maze_circles = [[21, 36], [42, 25], [44, 46], [11, 41], [64, 35], [53, 15], [12, 62], [14, 43], [51, 23]]
 
 maze1 = PhotoImage(file='images\\maze1.png')
 maze2 = PhotoImage(file='images\\maze2.png')
@@ -26,18 +20,11 @@ maze9 = PhotoImage(file='images\\maze9.png')
 input_frame = Frame(master, width=90, height=480)
 input_frame.grid(row=0, column=0)
 
-
 circle1_temp = StringVar()
 circle1_input = Entry(input_frame, textvariable=circle1_temp)
 circle1_input.grid(row=0, column=1)
 circle1_label = Label(input_frame, text='Circle 1')
 circle1_label.grid(row=0, column=0)
-
-circle2_temp = StringVar()
-circle2_input = Entry(input_frame, textvariable=circle2_temp)
-circle2_input.grid(row=1, column=1)
-circle2_label = Label(input_frame, text='Circle 2')
-circle2_label.grid(row=1, column=0)
 
 goal_temp = StringVar()
 goal_input = Entry(input_frame, textvariable=goal_temp)
@@ -51,20 +38,54 @@ location_input.grid(row=3, column=1)
 location_label = Label(input_frame, text='Location')
 location_label.grid(row=3, column=0)
 
+status = Label(input_frame, text='...')
+status.grid(row=4, column=1)
+
 maze_display = Canvas(master, width=480, height=480)
 maze_display.grid(row=0, column=1)
 
 
+def getmaze():
+    location = int(circle1_temp.get())
+    for i in maze_circles:
+        if location in i:
+            maze = maze_circles.index(i) + 1
+            drawmaze(maze)
+            status.config(text='Maze %s' % str(maze))
+            break
+        else:
+            status.config(text='Invalid circle location')
+
+
+def drawmaze(maze):
+    exec(f'maze_display.create_image(240, 240, image=maze{maze})')
+    goal = goal_temp.get()
+    goal_y1 = int(goal[0]) * box_size
+    goal_x1 = int(goal[1]) * box_size
+    goal_y2 = int(goal[0]) * box_size - box_size
+    goal_x2 = int(goal[1]) * box_size - box_size
+    goal_loc = maze_display.create_rectangle(goal_x1, goal_y1, goal_x2, goal_y2, width='2')
+    loc = location_temp.get()
+    loc_y1 = int(loc[0]) * box_size
+    loc_x1 = int(loc[1]) * box_size
+    loc_y2 = int(loc[0]) * box_size - box_size
+    loc_x2 = int(loc[1]) * box_size - box_size
+    loc_loc = maze_display.create_oval(loc_x1, loc_y1, loc_x2, loc_y2, width='2')
+
+
+submit_button = Button(input_frame, text='Submit', command=getmaze)
+submit_button.grid(row=5, column=1)
+
+
+def reset():
+    circle1_temp.set('')
+    goal_temp.set('')
+    location_temp.set('')
+    maze_display.delete("all")
+    status.config(text='...')
 
 
 
-
-
-
-
-
-
-submit_button = Button(input_frame, text='Submit')
-submit_button.grid(row=4, column=1)
-
+reset_button = Button(input_frame, text='Reset all', command=reset)
+reset_button.grid(row=6, column=1)
 master.mainloop()
